@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Extraction: From Underground to Gas Tank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            width: 14.28%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Section Styles */
+        .section {
+            min-height: 100vh;
+            padding: 100px 20px 50px;
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        /* Interactive Elements */
+        .interactive-element {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .timeline {
+            position: relative;
+            background: linear-gradient(90deg, #ff9a56, #ffad56);
+            border-radius: 50px;
+            height: 20px;
+            margin: 30px 0;
+            cursor: pointer;
+        }
+
+        .timeline-slider {
+            position: absolute;
+            top: -10px;
+            left: 10%;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .drilling-animation {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #8B4513 30%, #654321 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+
+        .drill-bit {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100px;
+            background: #666;
+            animation: drill 3s ease-in-out infinite;
+        }
+
+        @keyframes drill {
+            0% { top: -20px; }
+            50% { top: 150px; }
+            100% { top: -20px; }
+        }
+
+        .oil-layer {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: #000;
+            opacity: 0.8;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+        }
+
+        .quiz-question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.3);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.3);
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .section-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Key Takeaways */
+        .takeaways {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .takeaways h3 {
+            color: #2d3436;
+            margin-bottom: 15px;
+        }
+
+        .takeaways ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .takeaways li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .takeaways li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        /* Product Matching Game */
+        .matching-game {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .product-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-item.matched {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        /* Environmental Impact Scale */
+        .impact-scale {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(90deg, #ff7675 0%, #fdcb6e 50%, #6c5ce7 100%);
+            border-radius: 20px;
+            margin: 25px 0;
+        }
+
+        .impact-indicator {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: left 0.3s ease;
+        }
+
+        /* Achievement Badge */
+        .achievement {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            z-index: 10000;
+            animation: achievementPop 2s ease-in-out;
+        }
+
+        @keyframes achievementPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .section-card {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .matching-game {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glossary Popup */
+        .glossary-term {
+            color: #667eea;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .glossary-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="container">
+        <!-- Section 1: Introduction -->
+        <section class="section active" id="section1">
+            <div class="section-card">
+                <h2><span class="section-icon">🛢️</span>What is Oil and Why Do We Need It?</h2>
+                <div class="content">
+                    <p>Welcome to the fascinating world of oil extraction! Did you know that the phone in your pocket, the clothes you're wearing, and even some of your makeup contains oil-based products?</p>
+                    
+                    <p><strong>Crude oil</strong> is basically ancient soup - imagine plants and tiny sea creatures that died millions of years ago, got buried under layers of rock, and slowly cooked under pressure and heat until they became a thick, black liquid we call oil.</p>
+                </div>
+
+                <div class="interactive-element" onclick="startMatchingGame()">
+                    <h3>🎮 Interactive Game: Oil Products Around You</h3>
+                    <p>Click here to discover which everyday items contain oil!</p>
+                </div>
+
+                <div class="matching-game" id="matchingGame" style="display: none;">
+                    <div class="product-item" data-product="gasoline">🚗 Car Fuel</div>
+                    <div class="product-item" data-product="plastic">📱 Phone Case</div>
+                    <div class="product-item" data-product="cosmetics">💄 Lipstick</div>
+                    <div class="product-item" data-product="synthetic">👕 Polyester Shirt</div>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Oil is formed from ancient organic matter over millions of years</li>
+                        <li>We use oil in thousands of products beyond just gasoline</li>
+                        <li>From plastics to medicines, oil touches almost every part of our daily lives</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">Quick Check: What percentage of oil goes into making plastics?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">A) 5%</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">B) 12%</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">C) 25%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Where Does Oil Come From -->
+        <section class="section" id="section2">
+            <div class="section-card">
+                <h2><span class="section-icon">🌍</span>Where Does Oil Come From?</h2>
+                <div class="content">
+                    <p>Oil formation is like nature's slowest cooking recipe ever! It takes between 50 to 350 million years. That means some oil was forming when dinosaurs walked the Earth!</p>
+                    
+                    <p>The process is simple but takes forever: Dead sea creatures and plants → Get buried by sand and mud → Heat and pressure cook them → Oil is born!</p>
+                </div>
+
+                <div class="interactive-element">
+                    <h3>⏰ Interactive Timeline: Journey Through Time</h3>
+                    <div class="timeline" onclick="moveTimelineSlider(event)">
+                        <div class="timeline-slider" id="timeSlider">📅</div>
+                    </div>
+                    <p id="timelineText">Drag the slider to see oil formation through millions of years!</p>
+                </div>
+
+                <div class="drilling-animation">
+                    <div class="drill-bit"></div>
+                    <div class="oil-layer"></div>
+                    <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold;">
+                        Cross-section: Underground Oil Reservoir
+                    </div>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Oil formation takes 50-350 million years</li>
+                        <li>It's made from ancient sea creatures and plants</li>
+                        <li>Heat, pressure, and time are the main ingredients</li>
+                        <li>Oil gets trapped between layers of rock underground</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">True or False: Oil can form in just a few thousand years?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">True</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">False - it takes millions of years!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: How Do We Find Oil -->
+        <section class="section" id="section3">
+            <div class="section-card">
+                <h2><span class="section-icon">🔍</span>How Do We Find Oil?</h2>
+                <div class="content">
+                    <p>Finding oil is like being a detective, but instead of looking for clues in a room, you're looking for clues buried miles underground!</p>
+                    
+                    <p>Scientists use cool technology like <span class="glossary-term" onclick="showGlossary('seismic')">seismic waves</span> - they create small earthquakes and listen to the echoes to "see" what's underground. It's like using sonar, but for rocks!</p>
+                </div>
+
+                <div class="interactive-element" onclick="simulateSeismic()">
+                    <h3>🌊 Seismic Wave Simulator</h3>
+                    <p>Click to send seismic waves underground and discover oil deposits!</p>
+                    <div id="seismicDisplay" style="height: 100px; background: linear-gradient(to bottom, #87CEEB, #8B4513); border-radius: 10px; margin-top: 15px; position: relative;">
+                        <div id="seismicWave" style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: #ff6b6b; display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-element">
+                    <h3>📊 Oil Discovery Success Rate</h3>
+                    <p>Only <strong>1 in 10</strong> exploration wells actually finds oil! That's a 10% success rate.</p>
+                    <div style="display: flex; gap: 5px; margin-top: 15px;">
+                        <div style="width: 30px; height: 30px; background: #00ff88; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                        <div style="width: 30px; height: 30px; background: #ff4757; border-radius: 50%;"></div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.9em;">🟢 = Oil Found | 🔴 = Dry Well</p>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Geologists study rock formations and maps first</li>
+                        <li>Seismic testing uses sound waves to "see" underground</li>
+                        <li>Satellites and 3D computer models help locate oil</li>
+                        <li>Only 1 in 10 exploration attempts actually finds oil</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">What do seismic waves help us do?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Measure earthquakes</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">"See" underground rock formations</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Predict weather</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Extraction Methods -->
+        <section class="section" id="section4">
+            <div class="section-card">
+                <h2><span class="section-icon">⚙️</span>Methods of Oil Extraction</h2>
+                <div class="content">
+                    <p>There are three main ways to get oil out of the ground, kind of like different ways to get juice out of an orange!</p>
+                </div>
+
+                <div class="interactive-element" onclick="showExtractionMethod('conventional')">
+                    <h3>🏗️ Conventional Drilling</h3>
+                    <p>Like putting a giant straw into the ground - works when oil is in big, easy-to-reach pockets.</p>
+                </div>
+
+                <div class="interactive-element" onclick="showExtractionMethod('fracking')">
+                    <h3>💥 Fracking (Hydraulic Fracturing)</h3>
+                    <p>For oil trapped in tight rocks - we inject water, sand, and chemicals at high pressure to crack the rocks open.</p>
+                </div>
+
+                <div class="interactive-element" onclick="showExtractionMethod('oilsands')">
+                    <h3>⛏️ Oil Sands Extraction</h3>
+                    <p>Mining oil mixed with sand - like separating chocolate chips from cookie dough!</p>
+                </div>
+
+                <div id="extractionDemo" style="height: 300px; background: #f0f0f0; border-radius: 15px; margin: 25px 0; display: flex; align-items: center; justify-content: center; font-size: 1.2em; color: #666;">
+                    Click on an extraction method above to see how it works!
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Different oil deposits require different extraction methods</li>
+                        <li>Conventional drilling works for easily accessible oil</li>
+                        <li>Fracking can access oil in tight rock formations</li>
+                        <li>Oil sands require mining and separation processes</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">Which method is like "putting a giant straw in the ground"?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">Conventional drilling</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Fracking</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Oil sands extraction</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Step-by-Step Process -->
+        <section class="section" id="section5">
+            <div class="section-card">
+                <h2><span class="section-icon">🔄</span>The Extraction Process Step-by-Step</h2>
+                <div class="content">
+                    <p>Let's follow oil's journey from deep underground all the way to your gas tank!</p>
+                </div>
+
+                <div class="interactive-element" onclick="startProcessSimulation()">
+                    <h3>🎬 Interactive Process Simulator</h3>
+                    <p>Click to start the step-by-step oil extraction process!</p>
+                </div>
+
+                <div id="processSteps" style="display: none;">
+                    <div class="process-step active" id="step1">
+                        <h4>Step 1: Site Preparation</h4>
+                        <p>Clear land, build roads, and set up massive drilling equipment.</p>
+                    </div>
+                    <div class="process-step" id="step2">
+                        <h4>Step 2: Drilling</h4>
+                        <p>Using rotary drill bits (like giant corkscrews) to bore holes deep underground.</p>
+                    </div>
+                    <div class="process-step" id="step3">
+                        <h4>Step 3: Casing Installation</h4>
+                        <p>Installing steel pipes to prevent cave-ins and protect groundwater.</p>
+                    </div>
+                    <div class="process-step" id="step4">
+                        <h4>Step 4: Oil Flow</h4>
+                        <p>Oil flows up naturally at first, then we use pumps and injection techniques.</p>
+                    </div>
+                    <div class="process-step" id="step5">
+                        <h4>Step 5: Transportation</h4>
+                        <p>Moving oil via pipelines, trucks, trains, or ships to refineries.</p>
+                    </div>
+                    <div class="process-step" id="step6">
+                        <h4>Step 6: Refining</h4>
+                        <p>Heating crude oil and separating it into gasoline, diesel, plastics, and more!</p>
+                    </div>
+                </div>
+
+                <div class="interactive-element" onclick="nextProcessStep()" id="nextStepBtn" style="display: none;">
+                    <h3>➡️ Next Step</h3>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Oil extraction involves multiple complex steps</li>
+                        <li>Site preparation and safety measures come first</li>
+                        <li>Steel casing protects both the well and environment</li>
+                        <li>Crude oil must be refined into usable products</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">What happens at a refinery?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Oil is extracted from the ground</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">Crude oil is separated into different products</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Wells are drilled</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Environmental Impact -->
+        <section class="section" id="section6">
+            <div class="section-card">
+                <h2><span class="section-icon">🌱</span>Environmental Impact</h2>
+                <div class="content">
+                    <p>Like most powerful technologies, oil extraction has both benefits and challenges. Let's explore both sides fairly!</p>
+                </div>
+
+                <div class="interactive-element">
+                    <h3>⚖️ Impact Scale - Positive vs Challenges</h3>
+                    <div class="impact-scale">
+                        <div class="impact-indicator" id="impactSlider" onclick="adjustImpactSlider(event)">⚖️</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <span style="color: #ff7675;">Environmental Challenges</span>
+                        <span style="color: #6c5ce7;">Economic Benefits</span>
+                    </div>
+                </div>
+
+                <div id="impactDetails" style="margin: 25px 0;">
+                    <div style="background: rgba(255, 118, 117, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4>Environmental Challenges:</h4>
+                        <ul>
+                            <li>Air pollution and greenhouse gas emissions</li>
+                            <li>Risk of water contamination</li>
+                            <li>Wildlife habitat disruption</li>
+                            <li>Oil spills (like Deepwater Horizon in 2010)</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(108, 92, 231, 0.2); padding: 20px; border-radius: 10px;">
+                        <h4>Positive Impacts:</h4>
+                        <ul>
+                            <li>Jobs for millions of people worldwide</li>
+                            <li>Energy independence for countries</li>
+                            <li>Raw materials for essential products (medicines, plastics)</li>
+                            <li>Economic growth and development</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="interactive-element">
+                    <h3>🛠️ Cleanup and Safety Technologies</h3>
+                    <p>Modern oil companies use advanced technologies:</p>
+                    <ul style="margin-top: 15px; text-align: left;">
+                        <li>🤖 Remote monitoring systems</li>
+                        <li>🛡️ Double-wall pipelines to prevent leaks</li>
+                        <li>🌊 Oil spill cleanup boats and barriers</li>
+                        <li>📊 Environmental impact assessments</li>
+                        <li>♻️ Carbon capture and storage technology</li>
+                    </ul>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Oil extraction has both environmental challenges and economic benefits</li>
+                        <li>Modern technology helps reduce environmental risks</li>
+                        <li>Strict regulations govern oil extraction operations</li>
+                        <li>Cleanup and restoration efforts are improving constantly</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">What was one major oil spill mentioned in this section?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Exxon Valdez (1989)</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">Deepwater Horizon (2010)</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Taylor Energy (2004)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Future of Oil -->
+        <section class="section" id="section7">
+            <div class="section-card">
+                <h2><span class="section-icon">🚀</span>Future of Oil</h2>
+                <div class="content">
+                    <p>The energy world is changing fast! While oil will likely remain important for decades, exciting alternatives are growing rapidly.</p>
+                </div>
+
+                <div class="interactive-element" onclick="showEnergyTransition()">
+                    <h3>⚡ Energy Transition Timeline</h3>
+                    <p>Click to explore how our energy mix is changing!</p>
+                </div>
+
+                <div id="energyChart" style="display: none; height: 200px; background: linear-gradient(45deg, #ff9a56 0%, #ff6b6b 25%, #4ecdc4 50%, #45b7d1 75%, #96ceb4 100%); border-radius: 15px; margin: 25px 0; position: relative;">
+                    <div style="position: absolute; top: 20px; left: 20px; color: white; font-weight: bold;">
+                        Energy Sources Over Time
+                    </div>
+                    <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-size: 0.9em;">
+                        🟠 Oil | 🔴 Coal | 🔵 Natural Gas | 🟢 Renewables
+                    </div>
+                </div>
+
+                <div class="interactive-element" onclick="exploreCareer('traditional')">
+                    <h3>👨‍💼 Traditional Energy Careers</h3>
+                    <p>Petroleum Engineers, Geologists, Drilling Technicians, Pipeline Engineers</p>
+                </div>
+
+                <div class="interactive-element" onclick="exploreCareer('renewable')">
+                    <h3>🌱 Green Energy Careers</h3>
+                    <p>Solar Panel Installers, Wind Turbine Technicians, Environmental Scientists</p>
+                </div>
+
+                <div id="careerInfo" style="display: none; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin: 25px 0;">
+                    <div id="careerDetails"></div>
+                </div>
+
+                <div class="interactive-element">
+                    <h3>🔮 Fun Future Predictions</h3>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>🚗 Electric cars might be 50% of all vehicles by 2040</li>
+                        <li>🛢️ Oil will still be used for plastics and chemicals</li>
+                        <li>⚡ Solar energy could power entire cities</li>
+                        <li>🌊 Ocean waves might generate electricity</li>
+                        <li>🚁 Flying cars could run on hydrogen fuel</li>
+                    </ul>
+                </div>
+
+                <div class="takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li>Renewable energy is growing rapidly worldwide</li>
+                        <li>Oil will likely remain important for decades during the transition</li>
+                        <li>Exciting career opportunities exist in both traditional and green energy</li>
+                        <li>Innovation is driving cleaner extraction methods</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">Even as we move to renewable energy, oil will still be important for:</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Only gasoline production</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">Plastics, chemicals, and medicines</div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">Only heating homes</div>
+                    </div>
+                </div>
+
+                <!-- Completion Section -->
+                <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; color: white;">
+                    <h3>🎉 Congratulations!</h3>
+                    <p>You've completed the Oil Extraction Learning Journey!</p>
+                    <button class="nav-btn" onclick="generateCertificate()" style="margin-top: 20px;">
+                        📜 Get Your Certificate
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="previousSection()" disabled>← Previous</button>
+            <div class="section-indicator" id="sectionIndicator">Section 1 of 7</div>
+            <button class="nav-btn" id="nextBtn" onclick="nextSection()">Next →</button>
+        </div>
+    </div>
+
+    <!-- Glossary Popup -->
+    <div class="glossary-popup" id="glossaryPopup">
+        <h3 id="glossaryTerm"></h3>
+        <p id="glossaryDefinition"></p>
+        <button onclick="closeGlossary()" style="margin-top: 15px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    <!-- Achievement Badge -->
+    <div class="achievement" id="achievementBadge">🏆</div>
+
+    <script>
+        let currentSection = 1;
+        let completedQuizzes = new Set();
+        let processStep = 0;
+
+        // Navigation Functions
+        function nextSection() {
+            if (currentSection < 7) {
+                document.getElementById(`section${currentSection}`).classList.remove('active');
+                currentSection++;
+                document.getElementById(`section${currentSection}`).classList.add('active');
+                updateNavigation();
+                updateProgressBar();
+                showAchievement();
+            }
+        }
+
+        function previousSection() {
+            if (currentSection > 1) {
+                document.getElementById(`section${currentSection}`).classList.remove('active');
+                currentSection--;
+                document.getElementById(`section${currentSection}`).classList.add('active');
+                updateNavigation();
+                updateProgressBar();
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicator = document.getElementById('sectionIndicator');
+
+            prevBtn.disabled = currentSection === 1;
+            nextBtn.disabled = currentSection === 7;
+            nextBtn.textContent = currentSection === 7 ? 'Complete!' : 'Next →';
+            indicator.textContent = `Section ${currentSection} of 7`;
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = (currentSection / 7) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Interactive Elements
+        function startMatchingGame() {
+            const gameDiv = document.getElementById('matchingGame');
+            gameDiv.style.display = 'grid';
+            
+            const items = document.querySelectorAll('.product-item');
+            items.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.add('matched');
+                    this.innerHTML += ' ✓ Made from Oil!';
+                });
+            });
+        }
+
+        function moveTimelineSlider(event) {
+            const timeline = event.currentTarget;
+            const slider = document.getElementById('timeSlider');
+            const rect = timeline.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            
+            slider.style.left = `${Math.max(0, Math.min(90, percentage))}%`;
+            
+            const timeText = document.getElementById('timelineText');
+            if (percentage < 25) {
+                timeText.textContent = "350 million years ago: Ancient sea creatures die and sink";
+            } else if (percentage < 50) {
+                timeText.textContent = "200 million years ago: Layers of sediment bury organic matter";
+            } else if (percentage < 75) {
+                timeText.textContent = "100 million years ago: Heat and pressure start cooking the organic matter";
+            } else {
+                timeText.textContent = "Today: Oil is fully formed and ready for extraction!";
+            }
+        }
+
+        function simulateSeismic() {
+            const wave = document.getElementById('seismicWave');
+            wave.style.display = 'block';
+            wave.style.left = '0px';
+            
+            let position = 0;
+            const animation = setInterval(() => {
+                position += 5;
+                wave.style.left = position + 'px';
+                
+                if (position > 300) {
+                    clearInterval(animation);
+                    wave.style.display = 'none';
+                    alert('🎯 Oil deposit detected at 2,500 feet underground!');
+                }
+            }, 50);
+        }
+
+        function showExtractionMethod(method) {
+            const demo = document.getElementById('extractionDemo');
+            
+            switch(method) {
+                case 'conventional':
+                    demo.innerHTML = `
+                        <div style="text-align: center;">
+                            <h3>🏗️ Conventional Drilling</h3>
+                            <div style="margin: 20px 0;">
+                                <div style="width: 100px; height: 200px; background: #8B4513; margin: 0 auto; position: relative;">
+                                    <div style="width: 10px; height: 150px; background: #666; margin: 0 auto; animation: drill 2s linear infinite;"></div>
+                                    <div style="position: absolute; bottom: 20px; left: 0; right: 0; height: 20px; background: #000;">Oil Layer</div>
+                                </div>
+                            </div>
+                            <p>Vertical drilling directly down to oil reservoirs</p>
+                        </div>
+                    `;
+                    break;
+                case 'fracking':
+                    demo.innerHTML = `
+                        <div style="text-align: center;">
+                            <h3>💥 Fracking</h3>
+                            <div style="margin: 20px 0;">
+                                <div style="width: 200px; height: 100px; background: #8B4513; margin: 0 auto; position: relative; border-radius: 10px;">
+                                    <div style="position: absolute; top: 50%; left: 50%; width: 80px; height: 2px; background: #0066ff;">💧 High Pressure Water</div>
+                                    <div style="position: absolute; top: 40%; left: 60%; width: 30px; height: 1px; background: #000;"></div>
+                                    <div style="position: absolute; top: 60%; left: 70%; width: 25px; height: 1px; background: #000;"></div>
+                                </div>
+                            </div>
+                            <p>Horizontal drilling + high pressure water to crack rocks</p>
+                        </div>
+                    `;
+                    break;
+                case 'oilsands':
+                    demo.innerHTML = `
+                        <div style="text-align: center;">
+                            <h3>⛏️ Oil Sands Mining</h3>
+                            <div style="margin: 20px 0;">
+                                <div style="width: 150px; height: 80px; background: linear-gradient(45deg, #000 25%, #D2691E 25%, #000 50%, #D2691E 50%); margin: 0 auto; border-radius: 10px;"></div>
+                                <div style="margin: 10px 0;">↓</div>
+                                <div style="width: 100px; height: 30px; background: #000; margin: 0 auto; border-radius: 5px;">Separated Oil</div>
+                            </div>
+                            <p>Mining sand mixed with oil, then separating them</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        function startProcessSimulation() {
+            document.getElementById('processSteps').style.display = 'block';
+            document.getElementById('nextStepBtn').style.display = 'block';
+            processStep = 1;
+            updateProcessStep();
+        }
+
+        function nextProcessStep() {
+            if (processStep < 6) {
+                document.getElementById(`step${processStep}`).classList.remove('active');
+                processStep++;
+                document.getElementById(`step${processStep}`).classList.add('active');
+                updateProcessStep();
+            }
+        }
+
+        function updateProcessStep() {
+            const steps = document.querySelectorAll('.process-step');
+            steps.forEach((step, index) => {
+                if (index + 1 === processStep) {
+                    step.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                    step.style.color = 'white';
+                    step.style.padding = '20px';
+                    step.style.borderRadius = '10px';
+                    step.style.margin = '10px 0';
+                } else if (index + 1 < processStep) {
+                    step.style.background = 'rgba(102, 126, 234, 0.2)';
+                    step.style.color = '#333';
+                    step.style.padding = '15px';
+                    step.style.borderRadius = '10px';
+                    step.style.margin = '10px 0';
+                } else {
+                    step.style.background = 'rgba(0, 0, 0, 0.05)';
+                    step.style.color = '#666';
+                    step.style.padding = '10px';
+                    step.style.borderRadius = '10px';
+                    step.style.margin = '10px 0';
+                }
+            });
+
+            if (processStep === 6) {
+                document.getElementById('nextStepBtn').style.display = 'none';
+            }
+        }
+
+        function showEnergyTransition() {
+            document.getElementById('energyChart').style.display = 'block';
+        }
+
+        function exploreCareer(type) {
+            const careerInfo = document.getElementById('careerInfo');
+            const careerDetails = document.getElementById('careerDetails');
+            
+            careerInfo.style.display = 'block';
+            
+            if (type === 'traditional') {
+                careerDetails.innerHTML = `
+                    <h3>🛢️ Traditional Energy Careers</h3>
+                    <ul>
+                        <li><strong>Petroleum Engineer:</strong> $137,000/year - Design drilling equipment</li>
+                        <li><strong>Geologist:</strong> $92,000/year - Find oil deposits</li>
+                        <li><strong>Drilling Technician:</strong> $75,000/year - Operate drilling equipment</li>
+                        <li><strong>Pipeline Engineer:</strong> $95,000/year - Design oil transport systems</li>
+                    </ul>
+                `;
+            } else {
+                careerDetails.innerHTML = `
+                    <h3>🌱 Green Energy Careers</h3>
+                    <ul>
+                        <li><strong>Solar Panel Installer:</strong> $47,000/year - Install solar systems</li>
+                        <li><strong>Wind Turbine Technician:</strong> $56,000/year - Maintain wind farms</li>
+                        <li><strong>Environmental Scientist:</strong> $71,000/year - Study environmental impact</li>
+                        <li><strong>Energy Efficiency Specialist:</strong> $88,000/year - Optimize energy use</li>
+                    </ul>
+                `;
+            }
+        }
+
+        // Quiz Functions
+        function checkAnswer(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                } else if (option.onclick.toString().includes('true')) {
+                    option.classList.add('correct');
+                }
+            });
+
+            if (isCorrect) {
+                completedQuizzes.add(currentSection);
+            }
+
+            setTimeout(() => {
+                if (isCorrect) {
+                    alert('🎉 Correct! Great job!');
+                } else {
+                    alert('❌ Not quite right, but you\'re learning!');
+                }
+            }, 500);
+        }
+
+        // Glossary Functions
+        function showGlossary(term) {
+            const popup = document.getElementById('glossaryPopup');
+            const termElement = document.getElementById('glossaryTerm');
+            const definitionElement = document.getElementById('glossaryDefinition');
+
+            const definitions = {
+                'seismic': 'Seismic waves are vibrations that travel through the Earth. In oil exploration, we create controlled seismic waves and measure how they bounce back to "see" underground rock formations.'
+            };
+
+            termElement.textContent = term.charAt(0).toUpperCase() + term.slice(1);
+            definitionElement.textContent = definitions[term] || 'Definition not available.';
+            popup.style.display = 'block';
+        }
+
+        function closeGlossary() {
+            document.getElementById('glossaryPopup').style.display = 'none';
+        }
+
+        // Achievement System
+        function showAchievement() {
+            const badge = document.getElementById('achievementBadge');
+            badge.style.animation = 'achievementPop 2s ease-in-out';
+            
+            setTimeout(() => {
+                badge.style.animation = '';
+            }, 2000);
+        }
+
+        // Certificate Generation
+        function generateCertificate() {
+            const completionRate = (completedQuizzes.size / 7) * 100;
+            
+            // Create certificate HTML
+            const certificateHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 10px;" id="certificateModal">
+                    <div style="background: white; padding: 20px; border-radius: 15px; max-width: 95vw; width: 500px; max-height: 95vh; overflow-y: auto; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+                        <div style="border: 3px solid #667eea; padding: 15px; border-radius: 10px;">
+                            <h1 style="color: #667eea; margin-bottom: 10px; font-size: 1.5em; line-height: 1.2;">🎓 CERTIFICATE</h1>
+                            <h2 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.2em;">Oil Extraction Learning Journey</h2>
+                            
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <h3 style="margin-bottom: 10px; font-size: 1.1em;">Achievement Summary</h3>
+                                <p style="margin: 5px 0; font-size: 0.9em;"><strong>Quiz Score:</strong> ${completedQuizzes.size}/7 sections (${completionRate.toFixed(1)}%)</p>
+                                <p style="margin: 5px 0; font-size: 0.9em;"><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                            </div>
+                            
+                            <div style="text-align: left; margin: 15px 0; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 1em;">Learning Achievements:</h4>
+                                <div style="font-size: 0.8em; line-height: 1.4;">
+                                    <div>✅ Oil formation and geology</div>
+                                    <div>✅ Exploration techniques</div>
+                                    <div>✅ Extraction methods</div>
+                                    <div>✅ Environmental impact</div>
+                                    <div>✅ Future energy trends</div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin: 15px 0;">
+                                <div style="height: 2px; background: linear-gradient(90deg, #667eea, #764ba2); margin: 10px 0;"></div>
+                                <p style="font-style: italic; color: #666; font-size: 0.8em; line-height: 1.3;">Successful completion of interactive oil extraction learning experience</p>
+                            </div>
+                            
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 15px;">
+                                <button onclick="printCertificate()" style="padding: 10px 15px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; flex: 1; min-width: 100px;">🖨️ Print</button>
+                                <button onclick="downloadCertificate()" style="padding: 10px 15px; background: #00b894; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; flex: 1; min-width: 100px;">📄 Save</button>
+                                <button onclick="closeCertificate()" style="padding: 10px 15px; background: #636e72; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; flex: 1; min-width: 100px;">❌ Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add certificate to page
+            document.body.insertAdjacentHTML('beforeend', certificateHTML);
+        }
+
+        function printCertificate() {
+            window.print();
+        }
+
+        function downloadCertificate() {
+            // Create a downloadable text version
+            const completionRate = (completedQuizzes.size / 7) * 100;
+            const certificateText = `
+OIL EXTRACTION LEARNING JOURNEY - CERTIFICATE OF COMPLETION
+
+Student Achievement Summary:
+- Quiz Score: ${completedQuizzes.size}/7 sections (${completionRate.toFixed(1)}%)
+- Date Completed: ${new Date().toLocaleDateString()}
+
+Learning Achievements:
+✅ Oil formation and geology
+✅ Exploration techniques  
+✅ Extraction methods
+✅ Step-by-step processes
+✅ Environmental impact
+✅ Future energy trends
+
+This certifies successful completion of an interactive learning experience 
+covering oil extraction from underground formation to final products.
+
+Congratulations on completing this educational journey! 🎓
+            `;
+
+            // Create downloadable file
+            const blob = new Blob([certificateText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Oil_Extraction_Certificate.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function closeCertificate() {
+            const modal = document.getElementById('certificateModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavigation();
+            updateProgressBar();
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' && currentSection < 7) {
+                nextSection();
+            } else if (e.key === 'ArrowLeft' && currentSection > 1) {
+                previousSection();
+            }
+        });
+    </script>
+</body>
+</html>
